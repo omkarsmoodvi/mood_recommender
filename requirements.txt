@@ -11,3 +11,5 @@ pyaudioanalysis
 opensmile
 scikit-learn
 stable-baselines3
+nltk
+wordnet

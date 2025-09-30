@@ -1,17 +1,52 @@
+import nltk
 from transformers import pipeline
+from nltk.corpus import wordnet as wn
 
-# Load sentiment analysis pipeline (using DistilBERT for speed)
-sentiment_analyzer = pipeline("sentiment-analysis")
+# Download WordNet if needed
+try:
+    wn.synsets('happy')
+except LookupError:
+    nltk.download('wordnet')
 
-# You can also use emotion classification if you want (with a different model)
+# Emotion classification pipeline
+emotion_analyzer = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=False)
+
+# Emotion-to-content mapping
+EMOTION_TO_CONTENT = {
+    "joy": "upbeat music, fun videos, comedy",
+    "sadness": "calming podcasts, soft visuals, motivational talks",
+    "anger": "relaxing music, stress relief content",
+    "fear": "reassuring podcasts, positive stories",
+    "surprise": "exciting news, trending videos",
+    "love": "romantic movies, feel-good playlists",
+    "neutral": "trending content, documentaries, news",
+    # Add more emotions if desired
+}
+
+def get_emotion_from_dictionary(text):
+    tokens = text.lower().split()
+    emotion_keys = list(EMOTION_TO_CONTENT.keys())
+    for token in tokens:
+        for emotion in emotion_keys:
+            if emotion in token:
+                return emotion
+            for syn in wn.synsets(token):
+                for lemma in syn.lemma_names():
+                    if lemma.lower() == emotion:
+                        return emotion
+    return None
+
 def detect_mood(text: str):
-    result = sentiment_analyzer(text)[0]
-    # Map sentiment to mood
-    label = result["label"].lower()
-    if label == "positive":
-        mood = "happy"
-    elif label == "negative":
-        mood = "sad"
-    else:
-        mood = "neutral"
-    return {"mood": mood, "score": result["score"]}
+    # Dictionary/synonym match first
+    dictionary_emotion = get_emotion_from_dictionary(text)
+    if dictionary_emotion:
+        mood = dictionary_emotion
+        content = EMOTION_TO_CONTENT[mood]
+        return {"mood": mood, "score": 1.0, "recommended_content": content, "method": "dictionary"}
+    # ML-based detection as backup
+    result = emotion_analyzer(text)
+    label = result[0]["label"].lower()   # Note the [0] index!
+    mood = label if label in EMOTION_TO_CONTENT else "neutral"
+    content = EMOTION_TO_CONTENT.get(mood, "trending content")
+    score = result[0]["score"]
+    return {"mood": mood, "score": score, "recommended_content": content, "method": "ml"}
