@@ -9,3 +9,5 @@ python-dotenv
 pydantic
 python-multipart
 tf-keras
+vosk
+soundfile
