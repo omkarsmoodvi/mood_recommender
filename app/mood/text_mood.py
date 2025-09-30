@@ -2,16 +2,13 @@ import nltk
 from transformers import pipeline
 from nltk.corpus import wordnet as wn
 
-# Download WordNet if needed
 try:
     wn.synsets('happy')
 except LookupError:
     nltk.download('wordnet')
 
-# Emotion classification pipeline
-emotion_analyzer = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", return_all_scores=False)
+emotion_analyzer = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base", top_k=1)
 
-# Emotion-to-content mapping
 EMOTION_TO_CONTENT = {
     "joy": "upbeat music, fun videos, comedy",
     "sadness": "calming podcasts, soft visuals, motivational talks",
@@ -20,7 +17,6 @@ EMOTION_TO_CONTENT = {
     "surprise": "exciting news, trending videos",
     "love": "romantic movies, feel-good playlists",
     "neutral": "trending content, documentaries, news",
-    # Add more emotions if desired
 }
 
 def get_emotion_from_dictionary(text):
@@ -37,16 +33,14 @@ def get_emotion_from_dictionary(text):
     return None
 
 def detect_mood(text: str):
-    # Dictionary/synonym match first
     dictionary_emotion = get_emotion_from_dictionary(text)
     if dictionary_emotion:
         mood = dictionary_emotion
         content = EMOTION_TO_CONTENT[mood]
         return {"mood": mood, "score": 1.0, "recommended_content": content, "method": "dictionary"}
-    # ML-based detection as backup
-    result = emotion_analyzer(text)
-    label = result[0]["label"].lower()   # Note the [0] index!
+    result = emotion_analyzer(text)[0]
+    label = result["label"].lower()
     mood = label if label in EMOTION_TO_CONTENT else "neutral"
     content = EMOTION_TO_CONTENT.get(mood, "trending content")
-    score = result[0]["score"]
+    score = result["score"]
     return {"mood": mood, "score": score, "recommended_content": content, "method": "ml"}
