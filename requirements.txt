@@ -11,3 +11,4 @@ python-multipart
 tf-keras
 vosk
 soundfile
+supabase

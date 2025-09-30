@@ -9,7 +9,6 @@ def get_age_group(age):
 
 def recommend_content(mood, age, goal=None):
     age_group = get_age_group(age)
-    # Example best YouTube channels by topic and age
     channel_map = {
         "learn python": {
             "child": ["CodeChum Kids"],
@@ -37,7 +36,6 @@ def recommend_content(mood, age, goal=None):
             "adult": ["Chillhop Music", "Calm"]
         }
     }
-    # Default recommendations if no goal given
     mood_recs = {
         "joy":  ["Upbeat music", "Comedy", "Trending fun videos"],
         "sadness": ["Motivational talks", "Inspirational podcasts", "Soft visuals"],
@@ -47,7 +45,6 @@ def recommend_content(mood, age, goal=None):
         "love": ["Romantic movies", "Feel-good playlists"],
         "neutral": ["Documentaries", "Educational channels", "News"]
     }
-    # Build recommendations
     rec = {
         "age_group": age_group,
         "youtube_channels": [],

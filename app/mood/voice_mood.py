@@ -4,7 +4,7 @@ from vosk import Model, KaldiRecognizer
 import json
 from app.mood.text_mood import detect_mood
 
-MODEL_PATH = "vosk-model-small-en-us-0.15"  # Download/extract VOSK model
+MODEL_PATH = "vosk-model-small-en-us-0.15"
 
 def transcribe_audio(audio_bytes: bytes):
     with sf.SoundFile(io.BytesIO(audio_bytes)) as audio_file:
@@ -20,5 +20,5 @@ def detect_voice_mood_and_age(audio_bytes: bytes):
     text = transcribe_audio(audio_bytes)
     mood_result = detect_mood(text)
     mood_result["transcribed_text"] = text
-    mood_result["age"] = None  # Placeholder, can be replaced if voice age estimation is implemented
+    mood_result["age"] = None
     return mood_result
