@@ -1,7 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from pydantic import BaseModel
 from app.utils.supabase_client import supabase
 from app.mood.text_mood import detect_mood
+from app.mood.face_mood import detect_face_mood
 
 app = FastAPI()
 
@@ -39,13 +40,15 @@ def add_mood(entry: MoodEntry):
 def detect_text_mood(input: TextInput):
     try:
         mood_result = detect_mood(input.text)
-        # Example: map mood to content type
-        mood_to_content = {
-            "happy": "upbeat music, fun videos",
-            "sad": "calming podcasts, soft visuals",
-            "neutral": "trending content, news"
-        }
-        content = mood_to_content.get(mood_result["mood"], "trending content")
-        return {"mood": mood_result["mood"], "score": mood_result["score"], "recommended_content": content}
+        return mood_result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/detect-face-mood")
+async def detect_face_mood_api(file: UploadFile = File(...)):
+    try:
+        image_bytes = await file.read()
+        result = detect_face_mood(image_bytes)
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
