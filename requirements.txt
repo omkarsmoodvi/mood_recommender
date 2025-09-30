@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+supabase
+python-dotenv
+transformers
+torch
+fer
+moviepy
+opencv-python
+pyaudioanalysis
+opensmile
+scikit-learn
+stable-baselines3
