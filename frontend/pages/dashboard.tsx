@@ -2,6 +2,10 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import React, { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
+import YouTubeEmbed from "../components/YouTubeEmbed";
+import SpotifyEmbed from "../components/SpotifyEmbed";
+import ProductLinks from "../components/ProductLinks";
+import InstagramEmbed from "../components/InstagramEmbed";
 
 const APPS = [
   { name: 'Ajio', icon: '/icons/ajio.png' },
@@ -65,6 +69,24 @@ const Dashboard: React.FC = () => {
       {/* Recommendations Box */}
       <div className="recommendation-box">
         <span>Your recommendations will appear here.</span>
+      </div>
+      {/* YouTube Embeds Section */}
+      <div style={{ display: 'flex', gap: 20, marginBottom: 24 }}>
+        <YouTubeEmbed videoId="5qap5aO4i9A" /> {/* Lo-fi Girl */}
+        <YouTubeEmbed videoId="hHW1oY26kxQ" /> {/* Chillhop Music */}
+      </div>
+      {/* Spotify Embeds Section */}
+      <div style={{ display: 'flex', gap: 20, marginBottom: 24 }}>
+        <SpotifyEmbed playlistId="37i9dQZF1DXcBWIGoYBM5M" /> {/* Today's Top Hits */}
+        <SpotifyEmbed playlistId="37i9dQZF1DX4WYpdgoIcn6" /> {/* Chill Hits */}
+      </div>
+      {/* Amazon/Flipkart Product Links */}
+      <ProductLinks />
+      {/* Instagram Embed Section */}
+      <div style={{ display: 'flex', gap: 20, marginBottom: 24 }}>
+        {/* Example: replace the post code with any public Instagram post code */}
+        <InstagramEmbed postUrl="CwzH5Q2M1Qw" />
+        <InstagramEmbed postUrl="CwzH5Q2M1Qw" />
       </div>
       {/* App Grid */}
       <div className="app-grid">
