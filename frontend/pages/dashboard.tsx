@@ -1,3 +1,4 @@
+import { GoogleLogin } from '@react-oauth/google';
 import React, { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
@@ -87,7 +88,20 @@ const Dashboard: React.FC = () => {
         <div className="modal-overlay">
           <div className="login-modal">
             <h2>Connect to {loginApp}</h2>
-            <p>This is a placeholder for {loginApp} login functionality.</p>
+            {loginApp === "Google" ? (
+              <GoogleLogin
+                onSuccess={credentialResponse => {
+                  console.log("GOOGLE TOKEN:", credentialResponse);
+                  // You will see result in console after login!
+                }}
+                onError={() => {
+                  console.log("Google Login Failed");
+                }}
+                width="270"
+              />
+            ) : (
+              <p>This is a placeholder for {loginApp} login functionality.</p>
+            )}
             <button className="close-modal" onClick={() => setLoginApp(null)}>
               Close
             </button>
