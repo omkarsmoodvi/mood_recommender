@@ -1,4 +1,5 @@
 import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 import React, { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
@@ -21,10 +22,11 @@ const TABS = ['Music', 'Reels', 'Videos', 'Products'];
 
 const Dashboard: React.FC = () => {
   const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState(TABS);
+  const [activeTab, setActiveTab] = useState(TABS[0]);
   const [profileOpen, setProfileOpen] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [loginApp, setLoginApp] = useState<string | null>(null);
+  const [googleUser, setGoogleUser] = useState<any>(null);
   const isDark = theme === 'dark';
 
   return (
@@ -89,20 +91,31 @@ const Dashboard: React.FC = () => {
           <div className="login-modal">
             <h2>Connect to {loginApp}</h2>
             {loginApp === "Google" ? (
-              <GoogleLogin
-                onSuccess={credentialResponse => {
-                  console.log("GOOGLE TOKEN:", credentialResponse);
-                  // You will see result in console after login!
-                }}
-                onError={() => {
-                  console.log("Google Login Failed");
-                }}
-                width="270"
-              />
+              googleUser ? (
+                <div>
+                  <h4>Welcome, {googleUser.name}</h4>
+                  <p>Email: {googleUser.email}</p>
+                  <img src={googleUser.picture} alt="Google Profile" style={{ borderRadius: "50%", width: 60 }} />
+                </div>
+              ) : (
+                <GoogleLogin
+                  onSuccess={credentialResponse => {
+                    if (credentialResponse.credential) {
+                      const decoded: any = jwtDecode(credentialResponse.credential);
+                      setGoogleUser(decoded);
+                      console.log(decoded);
+                    }
+                  }}
+                  onError={() => {
+                    console.log("Google Login Failed");
+                  }}
+                  width="270"
+                />
+              )
             ) : (
               <p>This is a placeholder for {loginApp} login functionality.</p>
             )}
-            <button className="close-modal" onClick={() => setLoginApp(null)}>
+            <button className="close-modal" onClick={() => { setLoginApp(null); setGoogleUser(null); }}>
               Close
             </button>
           </div>
