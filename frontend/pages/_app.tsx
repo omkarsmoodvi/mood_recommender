@@ -2,8 +2,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 
-// Replace with your actual Client ID!
-const clientId = "YOUR_GOOGLE_CLIENT_ID_HERE";
+// Your Google OAuth Client ID
+const clientId = "1082391330059-guhsk7c6v9v9ab0kmdosbpmcj98aqnro.apps.googleusercontent.com";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
