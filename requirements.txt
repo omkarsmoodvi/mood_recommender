@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+deepface
+opencv-python
+numpy
+transformers
+nltk
+python-dotenv
+pydantic
+python-multipart
+tf-keras
+vosk
+soundfile
+supabase
